@@ -65,29 +65,54 @@ class BinaryNerdView extends WatchUi.WatchFace {
         ]));
     }
 
+    hidden function getHeartRate() {
+        if (!((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getHeartRateHistory))) {
+            return null;
+        }
+
+        var it = SensorHistory.getHeartRateHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST });
+        if (it == null) {
+            return null;
+        }
+
+        return it.next().data;
+    }
+
     hidden function updateHeartRate() as Void {
         var label = View.findDrawableById("HeartRate") as Text;
-        var it = SensorHistory.getHeartRateHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST }).next();
-        if (it == null) {
-            // heart rate unavailable
+        var hr = getHeartRate();
+        if (hr == null) {
             View.findDrawableById("HeartIcon").setVisible(false);
             label.setVisible(false);
             return;
         }
 
-        label.setText(it.data.format("%d"));
+        label.setText(hr.format("%d"));
+    }
+
+    hidden function getElevation() {
+        if (!((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getElevationHistory))) {
+            return null;
+        }
+
+        var it = SensorHistory.getElevationHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST });
+        if (it == null) {
+            return null;
+        }
+
+        return it.next().data;
     }
 
     hidden function updateElevation() as Void {
         var label = View.findDrawableById("Elevation") as Text;
-        var it = SensorHistory.getElevationHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST }).next();
-        if (it == null) {
+        var elevation = getElevation();
+        if (elevation == null) {
             label.setVisible(false);
             View.findDrawableById("ElevationIcon").setVisible(false);
             return;
         }
 
-        label.setText(it.data.format("%d"));
+        label.setText(elevation.format("%d"));
     }
 
     hidden function drawSeconds(dc as Dc, seconds as Lang.Number) as Void {
