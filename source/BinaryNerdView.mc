@@ -67,6 +67,11 @@ class BinaryNerdView extends WatchUi.WatchFace {
     }
 
     hidden function getHeartRate() {
+        var hr = Activity.getActivityInfo().currentHeartRate;
+        if (hr != null) {
+            return hr;
+        }
+
         if (!((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getHeartRateHistory))) {
             return null;
         }
