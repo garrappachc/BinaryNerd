@@ -1,3 +1,4 @@
 <layout id="WatchFace">
     <drawable class="Background" />
+    <drawable class="Diodes" />
 </layout>
