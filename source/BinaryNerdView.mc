@@ -4,23 +4,22 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
-const SCREEN_WIDTH = 260;
-const SCREEN_HEIGHT = 260;
+const DIODE_WIDTH = 30;
+const DIODE_HEIGHT = 50;
+const DIODE_SLANT = 6;
 
-const DIODE_RADIUS = 12;
-const DIODE_HEIGHT = 20;
-const DIODE_WIDTH = 10;
 const DIODE_GAP_X = 5;
-const DIODE_GAP_Y = 15;
-const DIODE_COUNT = 6;
-const DIODES_TOTAL_WIDTH = ((DIODE_RADIUS * 2) * DIODE_COUNT);
-const DIODES_TOTAL_HEIGHT = ((DIODE_RADIUS * 2) * 2);
+const DIODE_GAP_Y = 5;
 
-const START_X = (SCREEN_WIDTH / 2) - (DIODES_TOTAL_WIDTH / 2);
-const START_Y = (SCREEN_HEIGHT / 2) - (DIODES_TOTAL_HEIGHT / 2);
+const DIODES_TOTAL_HEIGHT = DIODE_HEIGHT + DIODE_GAP_Y;
 
-const COLOR_HOUR = Graphics.COLOR_ORANGE;
-const COLOR_MINUTE = Graphics.COLOR_ORANGE;
+const HOUR_DIODE_COUNT = 5;
+const HOUR_DIODE_COLOR = Graphics.COLOR_ORANGE;
+const HOUR_TOTAL_WIDTH = (DIODE_WIDTH * HOUR_DIODE_COUNT);
+
+const MINUTE_DIODE_COUNT = 6;
+const MINUTE_DIODE_COLOR = Graphics.COLOR_ORANGE;
+const MINUTE_TOTAL_WIDTH = (DIODE_WIDTH * MINUTE_DIODE_COUNT);
 
 class BinaryNerdView extends WatchUi.WatchFace {
 
@@ -41,34 +40,12 @@ class BinaryNerdView extends WatchUi.WatchFace {
 
     // Update the view
     function onUpdate(dc as Dc) as Void {
-        // Get the current time and format it correctly
-        // var timeFormat = "$1$:$2$";
-        // var clockTime = System.getClockTime();
-        // var hours = clockTime.hour;
-        // if (!System.getDeviceSettings().is24Hour) {
-        //     if (hours > 12) {
-        //         hours = hours - 12;
-        //     }
-        // } else {
-        //     if (Application.Properties.getValue("UseMilitaryFormat")) {
-        //         timeFormat = "$1$$2$";
-        //         hours = hours.format("%02d");
-        //     }
-        // }
-        // var timeString = Lang.format(timeFormat, [hours, clockTime.min.format("%02d")]);
-
-        // // Update the view
-        // var view = View.findDrawableById("TimeLabel") as Text;
-        // view.setColor(Graphics.COLOR_BLUE);
-        // view.setText("DANTUA");
-
-        // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
 
         var clockTime = System.getClockTime();
-        drawDiodes(dc, COLOR_HOUR, clockTime.hour, START_Y);
-        drawDiodes(dc, COLOR_MINUTE, clockTime.min, START_Y + (DIODE_HEIGHT * 2) + DIODE_GAP_Y);
-
+        var startY = (dc.getHeight() / 2) - (DIODES_TOTAL_HEIGHT * 0.75);
+        drawDiodes(dc, HOUR_DIODE_COLOR, clockTime.hour, 5, (dc.getWidth() / 2) - (HOUR_TOTAL_WIDTH / 2), startY);
+        drawDiodes(dc, MINUTE_DIODE_COLOR, clockTime.min, 6, (dc.getWidth() / 2) - (MINUTE_TOTAL_WIDTH / 2), startY + DIODE_HEIGHT + DIODE_GAP_Y);
     }
 
     // Called when this View is removed from the screen. Save the
@@ -85,42 +62,39 @@ class BinaryNerdView extends WatchUi.WatchFace {
     function onEnterSleep() as Void {
     }
 
-    hidden function drawDiodes(dc as Dc, onColor, number as Lang.Number, y) as Void {
-        var x = START_X;
-
-        dc.setPenWidth(2);
-
-        var n = 32;
+    hidden function drawDiodes(dc as Dc, onColor, number as Lang.Number, pad, x, y) as Void {
+        var n = Math.pow(2, pad - 1).toNumber();
         while (true) {
-            var on = number & n;
-            dc.setColor(on > 0 ? onColor : Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-
-            var height2 = DIODE_HEIGHT - 6;
-
+            var halfHeight = DIODE_HEIGHT / 2;
+            var halfWidth = DIODE_WIDTH / 2;
+            var heightSlanted = halfHeight - DIODE_SLANT;
             var pts = [
-                [x - DIODE_RADIUS, y - height2],
-                [x, y - DIODE_HEIGHT],
-                [x + DIODE_RADIUS, y - height2],
-                [x + DIODE_RADIUS, y + height2],
-                [x, y + DIODE_HEIGHT],
-                [x - DIODE_RADIUS, y + height2],
+                [x - halfWidth, y - heightSlanted],
+                [x, y - halfHeight],
+                [x + halfWidth, y - heightSlanted],
+                [x + halfWidth, y + heightSlanted],
+                [x, y + halfHeight],
+                [x - halfWidth, y + heightSlanted],
             ];
-            dc.fillPolygon(pts);
 
-            // if (on > 0) {
-                // dc.fillCircle(x, y, DIODE_RADIUS);
-                
-            // } else {
-                // dc.drawCircle(x, y, DIODE_RADIUS);
-                // dc.draw
-                
-            // }
+            var on = number & n;
+            if (on > 0) {
+                dc.setColor(0xFFFF00, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon(pts);
+            } else {
+                dc.setPenWidth(1);
+                dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
 
-            x = x + (DIODE_RADIUS * 2) + DIODE_GAP_X;
+                dc.drawLine(pts[3][0], pts[3][1], pts[4][0], pts[4][1]);
+                dc.drawLine(pts[4][0], pts[4][1], pts[5][0], pts[5][1]);
+                dc.drawLine(pts[5][0], pts[5][1], pts[0][0], pts[0][1]);
+            }
+
             if (n == 1) {
                 break;
             }
 
+            x = x + DIODE_WIDTH + DIODE_GAP_X;
             n = n / 2;
         }
     }
