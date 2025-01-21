@@ -1,4 +1,6 @@
 <layout id="WatchFace">
     <drawable class="Background" />
     <drawable class="Diodes" />
+
+    <label id="CurrentDate" x="50%" y="10%" font="@Fonts.retro" color="Gfx.COLOR_WHITE" justification="Graphics.TEXT_JUSTIFY_CENTER" />
 </layout>
