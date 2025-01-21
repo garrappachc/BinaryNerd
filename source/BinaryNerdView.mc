@@ -31,6 +31,7 @@ class BinaryNerdView extends WatchUi.WatchFace {
         updateCurrentDate();
         updateHeartRate();
         updateElevation();
+        updateStepCount();
 
         if (!sleeping) {
             var clockTime = System.getClockTime();
@@ -113,6 +114,18 @@ class BinaryNerdView extends WatchUi.WatchFace {
         }
 
         label.setText(elevation.format("%d"));
+    }
+
+    hidden function updateStepCount() as Void {
+        var label = View.findDrawableById("StepCount") as Text;
+        var steps = ActivityMonitor.getInfo().steps;
+        if (steps == null) {
+            label.setVisible(false);
+            View.findDrawableById("StepsIcon").setVisible(false);
+            return;
+        }
+
+        label.setText(steps.format("%d"));
     }
 
     hidden function drawSeconds(dc as Dc, seconds as Lang.Number) as Void {

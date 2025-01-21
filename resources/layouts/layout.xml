@@ -52,4 +52,21 @@
         color="Gfx.COLOR_WHITE"
         justification="Graphics.TEXT_JUSTIFY_LEFT"
     />
+
+    <bitmap
+        id="StepsIcon"
+        x="105"
+        y="221"
+        filename="../drawables/steps.png"
+        scaleX="16"
+        scaleY="16"
+    />
+    <label
+        id="StepCount"
+        x="125"
+        y="220"
+        font="@Fonts.retro"
+        color="Gfx.COLOR_WHITE"
+        justification="Graphics.TEXT_JUSTIFY_LEFT"
+    />
 </layout>
