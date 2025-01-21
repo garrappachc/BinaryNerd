@@ -1,6 +1,7 @@
 import Toybox.Application;
 import Toybox.Graphics;
 import Toybox.Lang;
+import Toybox.SensorHistory;
 import Toybox.System;
 import Toybox.WatchUi;
 
@@ -27,14 +28,9 @@ class BinaryNerdView extends WatchUi.WatchFace {
     function onUpdate(dc as Dc) as Void {
         View.onUpdate(dc);
 
-        var currentDate = View.findDrawableById("CurrentDate") as Text;
-        var now = Time.now();
-        var today = Time.Gregorian.info(now, Time.FORMAT_SHORT);
-        currentDate.setColor(Properties.getValue("ForegroundColor") as Number);
-        currentDate.setText(Lang.format("$1$ $2$", [
-            monthName(today.month),
-            today.day,
-        ]));
+        updateCurrentDate();
+        updateHeartRate();
+        updateElevation();
 
         if (!sleeping) {
             var clockTime = System.getClockTime();
@@ -56,6 +52,42 @@ class BinaryNerdView extends WatchUi.WatchFace {
     // Terminate any active timers and prepare for slow updates.
     function onEnterSleep() as Void {
         sleeping = true;
+    }
+
+    hidden function updateCurrentDate() as Void {
+        var currentDate = View.findDrawableById("CurrentDate") as Text;
+        var now = Time.now();
+        var today = Time.Gregorian.info(now, Time.FORMAT_SHORT);
+        currentDate.setColor(Properties.getValue("ForegroundColor") as Number);
+        currentDate.setText(Lang.format("$1$ $2$", [
+            monthName(today.month),
+            today.day,
+        ]));
+    }
+
+    hidden function updateHeartRate() as Void {
+        var label = View.findDrawableById("HeartRate") as Text;
+        var it = SensorHistory.getHeartRateHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST }).next();
+        if (it == null) {
+            // heart rate unavailable
+            View.findDrawableById("HeartIcon").setVisible(false);
+            label.setVisible(false);
+            return;
+        }
+
+        label.setText(it.data.format("%d"));
+    }
+
+    hidden function updateElevation() as Void {
+        var label = View.findDrawableById("Elevation") as Text;
+        var it = SensorHistory.getElevationHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST }).next();
+        if (it == null) {
+            label.setVisible(false);
+            View.findDrawableById("ElevationIcon").setVisible(false);
+            return;
+        }
+
+        label.setText(it.data.format("%d"));
     }
 
     hidden function drawSeconds(dc as Dc, seconds as Lang.Number) as Void {

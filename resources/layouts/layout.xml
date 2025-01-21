@@ -2,5 +2,54 @@
     <drawable class="Background" />
     <drawable class="Diodes" />
 
-    <label id="CurrentDate" x="50%" y="10%" font="@Fonts.retro" color="Gfx.COLOR_WHITE" justification="Graphics.TEXT_JUSTIFY_CENTER" />
+    <bitmap
+        id="CalendarIcon"
+        x="90"
+        y="24"
+        filename="../drawables/calendar.png"
+        scaleX="16"
+        scaleY="16"
+    />
+    <label
+        id="CurrentDate"
+        x="110"
+        y="24"
+        font="@Fonts.retro"
+        color="Gfx.COLOR_WHITE"
+        justification="Graphics.TEXT_JUSTIFY_LEFT"
+    />
+
+    <bitmap
+        id="HeartIcon"
+        x="105"
+        y="181"
+        filename="../drawables/heart.png"
+        scaleX="16"
+        scaleY="16"
+    />
+    <label
+        id="HeartRate"
+        x="125"
+        y="180"
+        font="@Fonts.retro"
+        color="Gfx.COLOR_WHITE"
+        justification="Graphics.TEXT_JUSTIFY_LEFT"
+    />
+
+    <bitmap
+        id="ElevationIcon"
+        x="105"
+        y="201"
+        filename="../drawables/elevation.png"
+        scaleX="16"
+        scaleY="16"
+    />
+    <label
+        id="Elevation"
+        x="125"
+        y="200"
+        font="@Fonts.retro"
+        color="Gfx.COLOR_WHITE"
+        justification="Graphics.TEXT_JUSTIFY_LEFT"
+    />
 </layout>
