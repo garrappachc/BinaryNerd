@@ -4,6 +4,8 @@
 
     <string id="ForegroundColorTitle">Foreground color</string>
     <string id="SecondsTickColorTitle">Seconds tick color</string>
+    <string id="HourDiodesColorTitle">Hour diodes color</string>
+    <string id="MinuteDiodesColorTitle">Minute diodes color</string>
 
     <string id="ColorBlack">Black</string>
     <string id="ColorOrange">Orange</string>

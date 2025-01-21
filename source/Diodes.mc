@@ -27,8 +27,8 @@ class Diodes extends WatchUi.Drawable {
   function draw(dc as Dc) as Void {
       var clockTime = System.getClockTime();
       var startY = (dc.getHeight() / 2) - (DIODES_TOTAL_HEIGHT * 0.75);
-      drawDiodes(dc, Properties.getValue("ForegroundColor") as Number, clockTime.hour, 5, (dc.getWidth() / 2) - (HOUR_TOTAL_WIDTH / 2), startY);
-      drawDiodes(dc, Properties.getValue("ForegroundColor") as Number, clockTime.min, 6, (dc.getWidth() / 2) - (MINUTE_TOTAL_WIDTH / 2), startY + DIODE_HEIGHT + DIODE_GAP_Y);
+      drawDiodes(dc, Properties.getValue("HourDiodesColor") as Number, clockTime.hour, 5, (dc.getWidth() / 2) - (HOUR_TOTAL_WIDTH / 2), startY);
+      drawDiodes(dc, Properties.getValue("MinuteDiodesColor") as Number, clockTime.min, 6, (dc.getWidth() / 2) - (MINUTE_TOTAL_WIDTH / 2), startY + DIODE_HEIGHT + DIODE_GAP_Y);
   }
 
   hidden function drawDiodes(dc as Dc, onColor, number as Lang.Number, pad as Lang.Number, x, y) as Void {

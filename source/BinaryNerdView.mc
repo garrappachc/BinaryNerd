@@ -30,6 +30,7 @@ class BinaryNerdView extends WatchUi.WatchFace {
         var currentDate = View.findDrawableById("CurrentDate") as Text;
         var now = Time.now();
         var today = Time.Gregorian.info(now, Time.FORMAT_SHORT);
+        currentDate.setColor(Properties.getValue("ForegroundColor") as Number);
         currentDate.setText(Lang.format("$1$ $2$", [
             monthName(today.month),
             today.day,
