@@ -106,7 +106,11 @@ class BinaryNerdView extends WatchUi.WatchFace {
             return null;
         }
 
-        return it.next().data;
+        var ret = it.next().data;
+        if (System.getDeviceSettings().heightUnits == System.UNIT_STATUTE) {
+            return ret * 3.28084; // meters to feet
+        }
+        return ret;
     }
 
     hidden function updateElevation() as Void {
