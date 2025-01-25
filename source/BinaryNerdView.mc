@@ -7,7 +7,7 @@ import Toybox.WatchUi;
 
 class BinaryNerdView extends WatchUi.WatchFace {
 
-    private var sleeping = false;
+    private var sleeping as Boolean = false;
 
     function initialize() {
         WatchFace.initialize();
@@ -66,8 +66,13 @@ class BinaryNerdView extends WatchUi.WatchFace {
         ]));
     }
 
-    hidden function getHeartRate() {
-        var hr = Activity.getActivityInfo().currentHeartRate;
+    hidden function getHeartRate() as Number? {
+        var activityInfo = Activity.getActivityInfo();
+        if (activityInfo == null) {
+            return null;
+        }
+
+        var hr = activityInfo.currentHeartRate;
         if (hr != null) {
             return hr;
         }
