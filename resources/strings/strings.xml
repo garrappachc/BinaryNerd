@@ -2,6 +2,7 @@
 
     <string id="AppName">BinaryNerd</string>
 
+    <string id="DrawDiodeHintsTitle">Draw diode hints</string>
     <string id="ForegroundColorTitle">Foreground color</string>
     <string id="SecondsTickColorTitle">Seconds tick color</string>
     <string id="HourDiodesColorTitle">Hour diodes color</string>

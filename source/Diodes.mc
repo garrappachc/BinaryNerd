@@ -20,53 +20,61 @@ const MINUTE_TOTAL_WIDTH = (DIODE_WIDTH * MINUTE_DIODE_COUNT);
 
 class Diodes extends WatchUi.Drawable {
 
-  function initialize() {
-      Drawable.initialize({ :identifier => "Diodes" });
-  }
+    private var _font = Application.loadResource(Rez.Fonts.retro) as FontReference;
 
-  function draw(dc as Dc) as Void {
-      var clockTime = System.getClockTime();
-      var startY = (dc.getHeight() / 2) - (DIODES_TOTAL_HEIGHT * 0.75);
-      drawDiodes(dc, Properties.getValue("HourDiodesColor") as Number, clockTime.hour, 5, (dc.getWidth() / 2) - (HOUR_TOTAL_WIDTH / 2), startY);
-      drawDiodes(dc, Properties.getValue("MinuteDiodesColor") as Number, clockTime.min, 6, (dc.getWidth() / 2) - (MINUTE_TOTAL_WIDTH / 2), startY + DIODE_HEIGHT + DIODE_GAP_Y);
-  }
+    function initialize() {
+        Drawable.initialize({ :identifier => "Diodes" });
+    }
 
-  hidden function drawDiodes(dc as Dc, onColor, number as Lang.Number, pad as Lang.Number, x, y) as Void {
-      var n = Math.pow(2, pad - 1).toNumber();
-      while (true) {
-          var halfHeight = DIODE_HEIGHT / 2;
-          var halfWidth = DIODE_WIDTH / 2;
-          var heightSlanted = halfHeight - DIODE_SLANT;
-          var pts = [
-              [x - halfWidth, y - heightSlanted],
-              [x, y - halfHeight],
-              [x + halfWidth, y - heightSlanted],
-              [x + halfWidth, y + heightSlanted],
-              [x, y + halfHeight],
-              [x - halfWidth, y + heightSlanted],
-          ];
+    function draw(dc as Dc) as Void {
+        var clockTime = System.getClockTime();
+        var startY = (dc.getHeight() / 2) - (DIODES_TOTAL_HEIGHT * 0.75);
+        drawDiodes(dc, Properties.getValue("HourDiodesColor") as Number, clockTime.hour, 5, (dc.getWidth() / 2) - (HOUR_TOTAL_WIDTH / 2), startY);
+        drawDiodes(dc, Properties.getValue("MinuteDiodesColor") as Number, clockTime.min, 6, (dc.getWidth() / 2) - (MINUTE_TOTAL_WIDTH / 2), startY + DIODE_HEIGHT + DIODE_GAP_Y);
+    }
 
-          var on = number & n;
-          if (on > 0) {
-              dc.setColor(onColor, Graphics.COLOR_TRANSPARENT);
-              dc.setAntiAlias(true);
-              dc.fillPolygon(pts);
-              dc.setAntiAlias(false);
-          } else {
-              dc.setPenWidth(1);
-              dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+    hidden function drawDiodes(dc as Dc, onColor, number as Lang.Number, pad as Lang.Number, x, y) as Void {
+        var drawHints = Properties.getValue("DrawDiodeHints") as Boolean;
+        var n = Math.pow(2, pad - 1).toNumber();
+        while (true) {
+            var halfHeight = DIODE_HEIGHT / 2;
+            var halfWidth = DIODE_WIDTH / 2;
+            var heightSlanted = halfHeight - DIODE_SLANT;
+            var pts = [
+                [x - halfWidth, y - heightSlanted],
+                [x, y - halfHeight],
+                [x + halfWidth, y - heightSlanted],
+                [x + halfWidth, y + heightSlanted],
+                [x, y + halfHeight],
+                [x - halfWidth, y + heightSlanted],
+            ];
 
-              dc.drawLine(pts[3][0], pts[3][1], pts[4][0], pts[4][1]);
-              dc.drawLine(pts[4][0], pts[4][1], pts[5][0], pts[5][1]);
-              dc.drawLine(pts[5][0], pts[5][1], pts[0][0], pts[0][1]);
-          }
+            var on = number & n;
+            if (on > 0) {
+                dc.setColor(onColor, Graphics.COLOR_TRANSPARENT);
+                dc.setAntiAlias(true);
+                dc.fillPolygon(pts);
+                dc.setAntiAlias(false);
+            } else {
+                dc.setPenWidth(1);
+                dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
 
-          if (n == 1) {
-              break;
-          }
+                dc.drawLine(pts[3][0], pts[3][1], pts[4][0], pts[4][1]);
+                dc.drawLine(pts[4][0], pts[4][1], pts[5][0], pts[5][1]);
+                dc.drawLine(pts[5][0], pts[5][1], pts[0][0], pts[0][1]);
+            }
 
-          x = x + DIODE_WIDTH + DIODE_GAP_X;
-          n = n / 2;
-      }
-  }
+            if (drawHints) {
+                dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(x, y, _font, n.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+            }
+
+            if (n == 1) {
+                break;
+            }
+
+            x = x + DIODE_WIDTH + DIODE_GAP_X;
+            n = n / 2;
+        }
+    }
 }

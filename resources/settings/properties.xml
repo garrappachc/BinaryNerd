@@ -1,5 +1,6 @@
 <properties>
 
+    <property id="DrawDiodeHints" type="boolean">true</property>
     <property id="ForegroundColor" type="number">0xFFFFFF</property>
     <property id="HourDiodesColor" type="number">0xFFAA00</property>
     <property id="MinuteDiodesColor" type="number">0xFFAA00</property>

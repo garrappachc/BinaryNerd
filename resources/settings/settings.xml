@@ -1,5 +1,9 @@
 <settings>
 
+    <setting propertyKey="@Properties.DrawDiodeHints" title="@Strings.DrawDiodeHintsTitle">
+        <settingConfig type="boolean" />
+    </setting>
+
     <setting propertyKey="@Properties.ForegroundColor" title="@Strings.ForegroundColorTitle">
         <settingConfig type="list">
             <listEntry value="0xFFAA00">@Strings.ColorOrange</listEntry>
