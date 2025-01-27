@@ -2,71 +2,27 @@
     <drawable class="Background" />
     <drawable class="Diodes" />
 
-    <bitmap
-        id="CalendarIcon"
-        x="90"
-        y="24"
-        filename="../drawables/calendar.png"
-        scaleX="16"
-        scaleY="16"
-    />
-    <label
-        id="CurrentDate"
-        x="110"
-        y="24"
-        font="@Fonts.retro"
-        color="Gfx.COLOR_WHITE"
-        justification="Graphics.TEXT_JUSTIFY_LEFT"
-    />
+    <drawable class="DataLabel">
+        <param name="type">DATE</param>
+        <param name="x">90</param>
+        <param name="y">24</param>
+    </drawable>
 
-    <bitmap
-        id="HeartIcon"
-        x="105"
-        y="181"
-        filename="../drawables/heart.png"
-        scaleX="16"
-        scaleY="16"
-    />
-    <label
-        id="HeartRate"
-        x="125"
-        y="180"
-        font="@Fonts.retro"
-        color="Gfx.COLOR_WHITE"
-        justification="Graphics.TEXT_JUSTIFY_LEFT"
-    />
+    <drawable class="DataLabel">
+        <param name="type">HEART_RATE</param>
+        <param name="x">105</param>
+        <param name="y">180</param>
+    </drawable>
 
-    <bitmap
-        id="ElevationIcon"
-        x="105"
-        y="201"
-        filename="../drawables/elevation.png"
-        scaleX="16"
-        scaleY="16"
-    />
-    <label
-        id="Elevation"
-        x="125"
-        y="200"
-        font="@Fonts.retro"
-        color="Gfx.COLOR_WHITE"
-        justification="Graphics.TEXT_JUSTIFY_LEFT"
-    />
+    <drawable class="DataLabel">
+        <param name="type">ELEVATION</param>
+        <param name="x">105</param>
+        <param name="y">200</param>
+    </drawable>
 
-    <bitmap
-        id="StepsIcon"
-        x="105"
-        y="221"
-        filename="../drawables/steps.png"
-        scaleX="16"
-        scaleY="16"
-    />
-    <label
-        id="StepCount"
-        x="125"
-        y="220"
-        font="@Fonts.retro"
-        color="Gfx.COLOR_WHITE"
-        justification="Graphics.TEXT_JUSTIFY_LEFT"
-    />
+    <drawable class="DataLabel">
+        <param name="type">STEPS</param>
+        <param name="x">105</param>
+        <param name="y">220</param>
+    </drawable>
 </layout>

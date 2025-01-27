@@ -1,3 +1,8 @@
 <drawables>
     <bitmap id="LauncherIcon" filename="launcher_icon.png" />
+
+    <bitmap id="calendarIcon" filename="calendar.png" scaleX="16" scaleY="16" />
+    <bitmap id="elevationIcon" filename="elevation.png" scaleX="16" scaleY="16" />
+    <bitmap id="heartIcon" filename="heart.png" scaleX="16" scaleY="16" />
+    <bitmap id="stepsIcon" filename="steps.png" scaleX="16" scaleY="16" />
 </drawables>

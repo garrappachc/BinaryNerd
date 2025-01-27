@@ -28,11 +28,6 @@ class BinaryNerdView extends WatchUi.WatchFace {
     function onUpdate(dc as Dc) as Void {
         View.onUpdate(dc);
 
-        updateCurrentDate();
-        updateHeartRate();
-        updateElevation();
-        updateStepCount();
-
         if (!sleeping) {
             var clockTime = System.getClockTime();
             drawSeconds(dc, clockTime.sec);
@@ -55,95 +50,8 @@ class BinaryNerdView extends WatchUi.WatchFace {
         sleeping = true;
     }
 
-    hidden function updateCurrentDate() as Void {
-        var currentDate = View.findDrawableById("CurrentDate") as Text;
-        var now = Time.now();
-        var today = Time.Gregorian.info(now, Time.FORMAT_SHORT);
-        currentDate.setColor(Properties.getValue("ForegroundColor") as Number);
-        currentDate.setText(Lang.format("$1$ $2$", [
-            monthName(today.month),
-            today.day,
-        ]));
-    }
-
-    hidden function getHeartRate() as Number? {
-        var activityInfo = Activity.getActivityInfo();
-        if (activityInfo == null) {
-            return null;
-        }
-
-        var hr = activityInfo.currentHeartRate;
-        if (hr != null) {
-            return hr;
-        }
-
-        if (!((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getHeartRateHistory))) {
-            return null;
-        }
-
-        var it = SensorHistory.getHeartRateHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST });
-        if (it == null) {
-            return null;
-        }
-
-        return it.next().data;
-    }
-
-    hidden function updateHeartRate() as Void {
-        var label = View.findDrawableById("HeartRate") as Text;
-        var hr = getHeartRate();
-        if (hr == null) {
-            View.findDrawableById("HeartIcon").setVisible(false);
-            label.setVisible(false);
-            return;
-        }
-
-        label.setText(hr.format("%d"));
-    }
-
-    hidden function getElevation() {
-        if (!((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getElevationHistory))) {
-            return null;
-        }
-
-        var it = SensorHistory.getElevationHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST });
-        if (it == null) {
-            return null;
-        }
-
-        var ret = it.next().data;
-        if (System.getDeviceSettings().heightUnits == System.UNIT_STATUTE) {
-            return ret * 3.28084; // meters to feet
-        }
-        return ret;
-    }
-
-    hidden function updateElevation() as Void {
-        var label = View.findDrawableById("Elevation") as Text;
-        var elevation = getElevation();
-        if (elevation == null) {
-            label.setVisible(false);
-            View.findDrawableById("ElevationIcon").setVisible(false);
-            return;
-        }
-
-        label.setText(elevation.format("%d"));
-    }
-
-    hidden function updateStepCount() as Void {
-        var label = View.findDrawableById("StepCount") as Text;
-        var steps = ActivityMonitor.getInfo().steps;
-        if (steps == null) {
-            label.setVisible(false);
-            View.findDrawableById("StepsIcon").setVisible(false);
-            return;
-        }
-
-        label.setText(steps.format("%d"));
-    }
-
     hidden function drawSeconds(dc as Dc, seconds as Lang.Number) as Void {
-        var secondHand = (seconds / 60.0) * Math.PI * 2 - degreesToRadians(90);
+        var angle = (seconds / 60.0) * Math.PI * 2 - degreesToRadians(90) as Float;
 
         var radius = dc.getWidth() / 2;
         var length = radius - 10;
@@ -151,10 +59,10 @@ class BinaryNerdView extends WatchUi.WatchFace {
         var middleX = dc.getWidth() / 2;
         var middleY = dc.getHeight() / 2;
 
-        var startX = Math.cos(secondHand) * radius;
-    	var startY = Math.sin(secondHand) * radius;
-        var endX = Math.cos(secondHand) * length;
-    	var endY = Math.sin(secondHand) * length;
+        var startX = Math.cos(angle) * radius;
+    	var startY = Math.sin(angle) * radius;
+        var endX = Math.cos(angle) * length;
+    	var endY = Math.sin(angle) * length;
 
         dc.setAntiAlias(true);
 
@@ -165,26 +73,8 @@ class BinaryNerdView extends WatchUi.WatchFace {
         dc.setAntiAlias(false);
     }
 
-    hidden function degreesToRadians(deg) {
+    hidden function degreesToRadians(deg as Number) {
 		return (deg * Math.PI / 180);
 	}
-
-    hidden function monthName(month as Lang.Number) as Lang.String {
-        var names = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec"
-        ];
-        return names[month - 1];
-    }
 
 }
